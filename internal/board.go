@@ -85,3 +85,30 @@ func (b *Board) CheckIfGameFinishedHorizontal() int {
 	}
 	return NoResult
 }
+
+// CheckIfGameFinishedVertical checks if someone won vertical
+func (b *Board) CheckIfGameFinishedVertical() int {
+	var counter int
+	for i := 0; i < b.ColumnCount; i++ {
+		column := b.Columns[i]
+		if column.Used < 4 {
+			continue
+		}
+		for j := 0; j < column.Used; j++ {
+			token := column.GetToken(i)
+			switch token {
+			case "X":
+				counter++
+				if counter == 4 && token == "X" {
+					return Player2
+				}
+			case "O":
+				counter++
+				if counter == 4 && token == "O" {
+					return Player1
+				}
+			}
+		}
+	}
+	return NoResult
+}
