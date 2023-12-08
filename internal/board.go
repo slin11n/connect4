@@ -1,14 +1,18 @@
 package internal
 
-import tm "github.com/buger/goterm"
+import (
+	tm "github.com/buger/goterm"
+)
 
 const (
 	Player1 = iota
 	Player2
+	Draw
+	NoResult
 )
 
 type Board struct {
-	Slots       []Column // List of columns for the board
+	Columns     []Column // List of columns for the board
 	ColumnCount int      // How many columns are used
 	NextPlayer  int      // Which player is up next
 }
@@ -20,7 +24,7 @@ func NewBoard(columns, capacity int) *Board {
 		cs = append(cs, *c)
 	}
 	return &Board{
-		Slots:       cs,
+		Columns:     cs,
 		ColumnCount: columns,
 		NextPlayer:  Player1,
 	}
@@ -28,16 +32,56 @@ func NewBoard(columns, capacity int) *Board {
 
 func (b *Board) Print() {
 	tm.Clear()
-	for x, s := range b.Slots {
-		if s.Used == 0 {
+	for x, c := range b.Columns {
+		if c.Used == 0 {
 			continue
 		}
-		for i := 0; i < s.Used; i++ {
-			tm.MoveCursor(x, s.Capacity-i)
-			tm.Print(s.GetToken(i))
+		for i := 0; i < c.Used; i++ {
+			tm.MoveCursor(x+1, c.Capacity-i)
+			token := c.GetToken(i)
+			tm.Print(token)
 		}
-		tm.MoveCursor(0, s.Capacity+1)
-		tm.Println("123456")
-		tm.Flush()
 	}
+	tm.MoveCursor(0, 7) // todo fix later
+	tm.Println("0123456")
+	tm.Flush()
+
+}
+
+// checkIfGameFinishedHorizontal checks if someone won horizontaly
+func (b *Board) CheckIfGameFinishedHorizontal() int {
+	// nimm die mittlere spalte
+	// von unten nach oben, von 0 ...
+	// wenn da ein token liegt
+	//   dann prüfe nach links, wieviele vom gleichen token gibt es
+	//   dann prüfe nach rechts, wieviele vom gleichen token gibt es
+	//   sind das 4?
+	column := b.Columns[3]
+	for i := 0; i < column.Capacity; i++ {
+		token := column.GetToken(i)
+		var counter int
+		if token == "X" || token == "O" {
+			for j := 0; j < b.ColumnCount; j++ {
+				horizontalColumn := b.Columns[j]
+				horizontalToken := horizontalColumn.GetToken(i)
+				switch horizontalToken {
+				case "X":
+					counter++
+					if counter == 4 && token == "X" {
+						return Player2
+					}
+				case "O":
+					counter++
+					if counter == 4 && token == "O" {
+						return Player1
+					}
+				default:
+					counter = 0
+				}
+
+			}
+
+		}
+	}
+	return NoResult
 }

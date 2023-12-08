@@ -32,10 +32,11 @@ func (c *Column) IsFull() bool {
 	return false
 }
 
+// GetToken returns the representation of the token in a slot
 func (c *Column) GetToken(slot int) string {
 	switch c.Slot[slot] {
 	case Player1Token:
-		return "O"
+		return "O" // This is NOT a Zero
 	case Player2Token:
 		return "X"
 	}

@@ -1,15 +1,29 @@
 package main
 
-import "connect4/internal"
+import (
+	"connect4/internal"
+	"fmt"
+	tm "github.com/buger/goterm"
+)
 
 func main() {
 	board := internal.NewBoard(7, 6)
-	board.Slots[3].PlaceToken(internal.Player1Token)
-	board.Slots[4].PlaceToken(internal.Player2Token)
-	board.Slots[2].PlaceToken(internal.Player1Token)
-	board.Slots[1].PlaceToken(internal.Player2Token)
-	board.Slots[4].PlaceToken(internal.Player1Token)
-	board.Slots[4].PlaceToken(internal.Player2Token)
-	board.Slots[2].PlaceToken(internal.Player1Token)
+	board.Columns[0].PlaceToken(internal.Player1Token)
+	board.Columns[2].PlaceToken(internal.Player1Token)
+	board.Columns[3].PlaceToken(internal.Player1Token)
+	board.Columns[4].PlaceToken(internal.Player1Token)
+	board.Columns[5].PlaceToken(internal.Player1Token)
+	//	board.Columns[3].PlaceToken(internal.Player1Token)
+	//	board.Columns[5].PlaceToken(internal.Player1Token)
+	result := board.CheckIfGameFinishedHorizontal()
 	board.Print()
+	tm.MoveCursor(0, 9)
+	tm.Print()
+	if result == internal.Player2 {
+		fmt.Println("Spieler 2 hat gewonnen")
+	}
+	if result == internal.Player1 {
+		fmt.Println("Spieler 1 hat gewonnen")
+	}
+
 }
