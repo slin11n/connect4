@@ -48,7 +48,22 @@ func (b *Board) Print() {
 
 }
 
-// checkIfGameFinishedHorizontal checks if someone won horizontaly
+func (b *Board) debugPrint() {
+
+}
+func (b *Board) CheckIfGameFinished() int {
+	//result := b.CheckIfGameFinishedHorizontal()
+	//result = b.CheckIfGameFinishedVertical()
+	//result = b.CheckIfGameFinishedDiagonal()
+	return 0
+}
+
+func (b *Board) GetMiddleColumn() *Column {
+	index := b.ColumnCount / 2
+	return &b.Columns[index]
+}
+
+/* checkIfGameFinishedHorizontal checks if someone won horizontaly
 func (b *Board) CheckIfGameFinishedHorizontal() int {
 	// nimm die mittlere spalte
 	// von unten nach oben, von 0 ...
@@ -56,7 +71,7 @@ func (b *Board) CheckIfGameFinishedHorizontal() int {
 	//   dann prüfe nach links, wieviele vom gleichen token gibt es
 	//   dann prüfe nach rechts, wieviele vom gleichen token gibt es
 	//   sind das 4?
-	column := b.Columns[3]
+	column := b.GetMiddleColumn()
 	for i := 0; i < column.Capacity; i++ {
 		token := column.GetToken(i)
 		var counter int
@@ -111,4 +126,32 @@ func (b *Board) CheckIfGameFinishedVertical() int {
 		}
 	}
 	return NoResult
+}
+*/
+
+// only checks horizontally right now
+// Todo
+func (b *Board) CheckIfGameIsFinished(x int, y int, countedType string, counter int) string {
+	current := b.GetToken(x, y)
+	if current == countedType {
+		if current == "." {
+			counter = 0
+
+		} else {
+			counter++
+		}
+
+	} else if b.IsToken(current) {
+		counter = 1
+	} else {
+		counter = 0
+	}
+	if counter == 4 {
+		return current
+	}
+	if x+1 < b.ColumnCount {
+		return b.CheckIfGameIsFinished(x+1, y, current, counter)
+	} else {
+		return "."
+	}
 }
