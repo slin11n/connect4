@@ -131,7 +131,7 @@ func (b *Board) CheckIfGameFinishedVertical() int {
 
 // only checks horizontally right now
 // Todo
-func (b *Board) CheckIfGameIsFinished(x int, y int, countedType string, counter int) string {
+func (b *Board) CheckIfGameIsFinished(x int, y int, countedType string, counter int, how string) int {
 	current := b.GetToken(x, y)
 	if current == countedType {
 		if current == "." {
@@ -147,11 +147,65 @@ func (b *Board) CheckIfGameIsFinished(x int, y int, countedType string, counter 
 		counter = 0
 	}
 	if counter == 4 {
-		return current
+		return b.CurrentToInt(current)
 	}
-	if x+1 < b.ColumnCount {
-		return b.CheckIfGameIsFinished(x+1, y, current, counter)
-	} else {
-		return "."
+	switch how {
+	case "h":
+		if x+1 < b.ColumnCount {
+			return b.CheckIfGameIsFinished(x+1, y, current, counter, "h")
+		} else {
+			return NoResult
+		}
+	case "v":
+		if y+1 < b.Columns[0].Capacity {
+			return b.CheckIfGameIsFinished(x, y+1, current, counter, "v")
+		} else {
+			return NoResult
+		}
+	case "d":
+		if x+1 < b.ColumnCount && y+1 < b.Columns[0].Capacity {
+			return b.CheckIfGameIsFinished(x+1, y+1, current, counter, "d")
+		} else {
+			return NoResult
+		}
 	}
+
+	return NoResult
+}
+
+// isToken decides if the string is an O or X
+func (b *Board) IsToken(current string) bool {
+	switch current {
+	case "X":
+		return true
+	case "O":
+		return true
+	default:
+		return false
+	}
+}
+
+func (b *Board) GetToken(x int, y int) string {
+	return b.Columns[x].GetToken(y)
+
+}
+
+func (b *Board) CurrentToInt(current string) int {
+	switch current {
+	case "X":
+		return Player2
+	case "O":
+		return Player1
+	default:
+		return NoResult
+	}
+}
+
+func (b *Board) IsBoardFull() bool {
+	for i := 0; i < b.ColumnCount; i++ {
+		if b.Columns[i].Used < b.Columns[i].Capacity {
+			return false
+		}
+	}
+	return true
 }

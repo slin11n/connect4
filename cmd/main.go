@@ -2,7 +2,6 @@ package main
 
 import (
 	"connect4/internal"
-	"fmt"
 	tm "github.com/buger/goterm"
 )
 
@@ -15,22 +14,36 @@ func main() {
 	board.Columns[6].PlaceToken(internal.Player1Token)
 	//	board.Columns[3].PlaceToken(internal.Player1Token)
 	//	board.Columns[5].PlaceToken(internal.Player1Token)
-	resultHor := board.CheckIfGameFinishedHorizontal()
 	board.Print()
 	tm.MoveCursor(0, 9)
 	tm.Print()
-	if resultHor == internal.Player2 {
-		fmt.Println("Spieler 2 hat gewonnen")
+	if board.IsBoardFull() == true {
+		tm.Println("Niemand hat gewonnen")
 	}
-	if resultHor == internal.Player1 {
-		fmt.Println("Spieler 1 hat gewonnen")
+
+	if board.CheckIfGameIsFinished(0, 0, "O", 0, "h") == internal.Player1 {
+		tm.Println("O hat gewonnen")
 	}
-	resultVer := board.CheckIfGameFinishedVertical()
-	if resultVer == internal.Player2 {
-		fmt.Println("Spieler 2 hat gewonnen")
+	if board.CheckIfGameIsFinished(0, 0, "X", 0, "h") == internal.Player2 {
+		tm.Println("X hat gewonnen")
 	}
-	if resultVer == internal.Player1 {
-		fmt.Println("Spieler 1 hat gewonnen")
+
+	if board.CheckIfGameIsFinished(0, 0, "O", 0, "v") == internal.Player1 {
+		tm.Println("O hat gewonnen")
+	}
+	if board.CheckIfGameIsFinished(0, 0, "X", 0, "v") == internal.Player2 {
+		tm.Println("X hat gewonnen")
+	}
+
+	if board.CheckIfGameIsFinished(0, 0, "O", 0, "d") == internal.Player1 {
+		tm.Println("O hat gewonnen")
+	}
+	if board.CheckIfGameIsFinished(0, 0, "X", 0, "d") == internal.Player2 {
+		tm.Println("X hat gewonnen")
+	}
+
+	if board.IsBoardFull() == true {
+		tm.Println("Niemand hat gewonnen")
 	}
 
 }
