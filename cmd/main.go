@@ -17,9 +17,6 @@ func main() {
 	board.Print()
 	tm.MoveCursor(0, 9)
 	tm.Print()
-	if board.IsBoardFull() == true {
-		tm.Println("Niemand hat gewonnen")
-	}
 
 	if board.CheckIfGameIsFinished(0, 0, "O", 0, "h") == internal.Player1 {
 		tm.Println("O hat gewonnen")
